@@ -1,0 +1,13 @@
+opportunity_id,agency_id,title,notice_type,posted_date,due_date,naics,psc,keywords,url,description
+O001,DON,Navy Data Visualization Pilot,Sources Sought,2025-05-01,2025-06-20,541512,D399,"Power BI;data visualization;decision support",https://sam.gov/example/O001,"Sample sources sought for Navy decision dashboards."
+O002,NAVSEA,Team Submarine Knowledge Graph,RFI,2025-05-05,2025-07-01,541512,D399,"knowledge management;RAG;enterprise search",https://sam.gov/example/O002,"Fictional RFI for knowledge graph modernization."
+O003,CDAO,AI Governance Metrics Prototype,Special Notice,2025-05-08,2025-06-10,541715,AJ12,"AI;data governance;metrics",https://sam.gov/example/O003,"Sample prototype notice for AI governance metrics."
+O004,DISA,Cloud Data Engineering Support,Presolicitation,2025-05-15,2025-07-15,541519,D317,"cloud;data engineering;cyber",https://sam.gov/example/O004,"Fictional DISA cloud data support opportunity."
+O005,USAF,Digital Engineering BI BPA Call,Combined Synopsis,2025-05-18,2025-06-30,541330,R425,"business intelligence;digital engineering",https://sam.gov/example/O005,"Sample Air Force BI task order opportunity."
+O006,ARMY,Acquisition Analytics Dashboard,Sources Sought,2025-05-22,2025-07-10,541611,R408,"acquisition analytics;Power BI",https://sam.gov/example/O006,"Synthetic Army acquisition analytics requirement."
+O007,DHA,Health Data Product Support,RFI,2025-06-01,2025-07-20,541511,D302,"health IT;data analytics;product management",https://sam.gov/example/O007,"Sample health data product support RFI."
+O008,GSA,Workflow Automation Discovery,Sources Sought,2025-06-02,2025-07-05,541611,R499,"workflow automation;Power Platform",https://sam.gov/example/O008,"Fictional workflow automation discovery."
+O009,DON,Navy Acquisition Decision Tool,Presolicitation,2025-06-04,2025-08-01,541611,R408,"decision support;acquisition analytics;data governance",https://sam.gov/example/O009,"Sample acquisition decision tool opportunity."
+O010,NAVSEA,Shipyard Metrics Modernization,RFI,2025-06-06,2025-08-12,541512,D399,"data visualization;Power Platform",https://sam.gov/example/O010,"Fictional shipyard metrics RFI."
+O011,CDAO,Data Accelerator Knowledge Management,Sources Sought,2025-06-10,2025-08-20,541611,R408,"knowledge management;data governance",https://sam.gov/example/O011,"Sample CDAO knowledge management support."
+O012,DISA,Zero Trust Analytics Enrichment,Combined Synopsis,2025-06-12,2025-07-30,541519,D310,"cyber;analytics;data engineering",https://sam.gov/example/O012,"Fictional zero trust analytics task."

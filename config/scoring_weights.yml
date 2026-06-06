@@ -1,0 +1,27 @@
+opportunity_score:
+  agency_relevance: 25
+  technical_capability_match: 25
+  contract_size_fit: 20
+  teaming_potential: 20
+  timing_recompete_window: 10
+
+teaming_score:
+  agency_relationship: 30
+  capability_alignment: 25
+  repeated_winner: 20
+  expiring_contracts: 15
+  small_business_partner_likelihood: 10
+
+recompete_score:
+  months_remaining_fit: 35
+  target_agency_relevance: 25
+  technical_match: 25
+  incumbent_partner_potential: 15
+
+agency_tiers:
+  tier_1: ["Department of the Navy", "NAVSEA", "Team Submarine", "CDAO", "DISA"]
+  tier_2: ["Air Force", "Army", "DoD"]
+
+size_fit:
+  ideal_min: 50000
+  ideal_max: 3000000

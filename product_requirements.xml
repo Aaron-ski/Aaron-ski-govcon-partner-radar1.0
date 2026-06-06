@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<product_requirements project="GovCon Partner Radar">
+  <epic id="E1" name="Market Focus">
+    <story id="US1">As a user, I want to see how much target agencies spend in my capability areas so I can identify attractive markets.</story>
+    <story id="US2">As a user, I want to identify the largest prime contractors in my target markets so I can evaluate teaming targets.</story>
+    <story id="US3">As a user, I want to see which contracts may recompete in 6, 12, and 24 months so I can plan outreach early.</story>
+    <story id="US4">As a user, I want active SAM opportunities scored by relevance so I can prioritize immediate actions.</story>
+    <story id="US5">As a user, I want a capture notes log so I can track BD context, contacts, and next actions.</story>
+  </epic>
+  <functional_requirements>
+    <requirement id="FR1">Load sample CSVs into DuckDB.</requirement>
+    <requirement id="FR2">Provide dashboard navigation in Streamlit sidebar.</requirement>
+    <requirement id="FR3">Filter all pages by agency, office, vendor, NAICS, PSC, capability keyword, date range, and score band where applicable.</requirement>
+    <requirement id="FR4">Calculate opportunity, teaming, and recompete scores using configurable weights.</requirement>
+    <requirement id="FR5">Allow export of filtered tables to CSV.</requirement>
+    <requirement id="FR6">Provide a manual capture log for notes, next steps, contact names, and outreach status.</requirement>
+    <requirement id="FR7">Separate ingestion scripts from dashboard runtime.</requirement>
+  </functional_requirements>
+  <nonfunctional_requirements>
+    <requirement id="NFR1">Dashboard must not perform live API calls during normal usage.</requirement>
+    <requirement id="NFR2">API keys must use environment variables loaded from .env and excluded by .gitignore.</requirement>
+    <requirement id="NFR3">Use DuckDB for fast local analytical queries.</requirement>
+    <requirement id="NFR4">Use Plotly charts and pandas dataframes in Streamlit.</requirement>
+    <requirement id="NFR5">Support Windows-first local development with cross-platform compatibility.</requirement>
+  </nonfunctional_requirements>
+  <phase_1_scope>
+    <include>Working local Streamlit app</include><include>DuckDB database</include><include>Sample CSV data</include><include>Manual CSV imports</include><include>Core dashboard pages</include><include>Configurable scoring</include><include>CSV export</include>
+    <exclude>Production hosting</exclude><exclude>User authentication</exclude><exclude>Paid data sources</exclude><exclude>Real-time API dashboard queries</exclude>
+  </phase_1_scope>
+  <acceptance_criteria>
+    <criterion>Running streamlit run app.py opens the dashboard.</criterion>
+    <criterion>Running python scripts/build_db.py creates data/govcon_radar.duckdb from sample CSVs.</criterion>
+    <criterion>Dashboard works after deleting sample data and replacing it with schema-matching API outputs.</criterion>
+  </acceptance_criteria>
+</product_requirements>

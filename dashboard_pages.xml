@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dashboard_pages project="GovCon Partner Radar">
+  <global_ui>
+    <requirement>Use Streamlit multipage app.</requirement>
+    <requirement>Use sidebar filters for agency, office, capability keyword, date range, and score threshold.</requirement>
+    <requirement>Use Plotly for charts and Streamlit dataframes for tables.</requirement>
+    <requirement>Every table should have CSV export.</requirement>
+  </global_ui>
+  <page name="Executive Overview">
+    <metrics>Total spending, award count, opportunity count, average opportunity score, recompetes within 12 months.</metrics>
+    <charts>Spending by agency; spending trend by quarter; top primes; upcoming recompetes.</charts>
+    <acceptance_criteria>Shows immediate market focus recommendations.</acceptance_criteria>
+  </page>
+  <page name="Agency Spending Explorer">
+    <display>Agency, sub-agency, office, spending trends, award counts, top vendors, NAICS/PSC mix.</display>
+    <filters>Agency, office, date range, NAICS, PSC, keyword.</filters>
+  </page>
+  <page name="Prime Contractor Intelligence">
+    <display>Top primes, awards won, award value, agencies supported, vehicles used, recent activity.</display>
+    <logic>Rank by total award value, count of awards, target agency alignment, and expiring contracts.</logic>
+  </page>
+  <page name="Recompete Tracker">
+    <display>Contract name, prime, agency, vehicle, value, start date, end date, months remaining, recompete probability.</display>
+    <logic>Flag contracts ending in 0-6, 7-12, and 13-24 months.</logic>
+  </page>
+  <page name="Partner Radar">
+    <display>Prime contractor, agency relationships, capability alignment, award count, expiring contracts, teaming attractiveness score.</display>
+    <logic>Prioritize primes with repeated wins, target agency presence, and relevant expiring awards.</logic>
+  </page>
+  <page name="Opportunity Tracker">
+    <display>SAM opportunities, notice type, due date, agency, keywords, opportunity score, URL.</display>
+    <logic>Prioritize by agency relevance, keyword match, timing, likely fit, and teaming potential.</logic>
+  </page>
+  <page name="Capture Log">
+    <display>Manual notes by award, opportunity, or vendor.</display>
+    <fields>Status, next action, notes, date, relationship owner.</fields>
+    <recommendation>Include this in the MVP because partner intelligence depends on human context not present in public datasets.</recommendation>
+  </page>
+</dashboard_pages>

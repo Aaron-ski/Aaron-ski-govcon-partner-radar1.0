@@ -22,7 +22,7 @@ def main() -> None:
 
     st.set_page_config(
         page_title=settings.app_title,
-        page_icon="📊",
+        page_icon="bar_chart",
         layout="wide",
         initial_sidebar_state="expanded",
     )

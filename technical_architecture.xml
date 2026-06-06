@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<technical_architecture project="GovCon Partner Radar">
+  <recommended_choice>
+    <development_environment>Windows-friendly Python virtual environment. Also compatible with macOS/Linux.</development_environment>
+    <reasoning>Because the founder may use a Windows Surface, local Streamlit + DuckDB avoids cloud cost and deployment complexity while remaining portable.</reasoning>
+  </recommended_choice>
+  <stack>
+    <frontend>Streamlit</frontend>
+    <backend>Python</backend>
+    <storage>DuckDB</storage>
+    <processing>Pandas; optional Polars for large files</processing>
+    <visualization>Plotly</visualization>
+    <configuration>YAML files in config/</configuration>
+    <secrets>.env loaded with python-dotenv; never commit .env</secrets>
+    <version_control>GitHub</version_control>
+  </stack>
+  <local_architecture>
+    <component name="app.py">Streamlit entrypoint and page router.</component>
+    <component name="src/db.py">DuckDB connection helpers and SQL query functions.</component>
+    <component name="src/scoring.py">Config-driven scoring functions.</component>
+    <component name="src/exports.py">CSV export helpers.</component>
+    <component name="scripts/build_db.py">Builds DuckDB from CSV files.</component>
+    <component name="scripts/ingest_usaspending.py">Pulls USAspending data into raw CSV/Parquet; not called by dashboard.</component>
+    <component name="scripts/ingest_sam.py">Pulls SAM opportunities into raw CSV/Parquet; not called by dashboard.</component>
+    <component name="data/sample/">Small sample CSVs for demo.</component>
+    <component name="data/raw/">API/raw source outputs, gitignored.</component>
+    <component name="data/processed/">Cleaned datasets, gitignored except sample.</component>
+    <component name="data/govcon_radar.duckdb">Local analytical database, gitignored.</component>
+  </local_architecture>
+  <security_guidance>
+    <rule>Commit .env.example, never .env.</rule>
+    <rule>Commit sample data only; gitignore raw API pulls and local DuckDB files.</rule>
+    <rule>Store SAM_API_KEY in environment variable, not in source code.</rule>
+    <rule>Use local config for scoring weights; do not store sensitive personal notes in a public repo.</rule>
+  </security_guidance>
+  <suggested_repository_tree><![CDATA[
+govcon-partner-radar/
+  app.py
+  README.md
+  requirements.txt
+  .gitignore
+  .env.example
+  config/
+    agencies.yml
+    keywords.yml
+    scoring_weights.yml
+  data/
+    sample/
+      agencies.csv
+      vendors.csv
+      awards.csv
+      opportunities.csv
+      contract_vehicles.csv
+      capture_notes.csv
+    raw/              # gitignored
+    processed/        # gitignored
+  scripts/
+    build_db.py
+    ingest_usaspending.py
+    ingest_sam.py
+  src/
+    db.py
+    scoring.py
+    transforms.py
+    exports.py
+    charts.py
+  pages/
+    1_Executive_Overview.py
+    2_Agency_Spending_Explorer.py
+    3_Prime_Contractor_Intelligence.py
+    4_Recompete_Tracker.py
+    5_Partner_Radar.py
+    6_Opportunity_Tracker.py
+    7_Capture_Log.py
+]]></suggested_repository_tree>
+  <acceptance_criteria>
+    <criterion>Dashboard imports no API clients.</criterion>
+    <criterion>Ingestion scripts can be run independently and scheduled locally.</criterion>
+    <criterion>Application starts with sample data without requiring API credentials.</criterion>
+  </acceptance_criteria>
+</technical_architecture>

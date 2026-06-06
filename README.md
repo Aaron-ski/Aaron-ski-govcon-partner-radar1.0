@@ -1,6 +1,10 @@
 # GovCon Partner Radar
 
-Local-first Phase 1 MVP for exploring synthetic government contracting spending, agency demand signals, and prime contractor partner-fit indicators.
+GovCon Partner Radar is a local-first Streamlit + DuckDB MVP for personal government contracting market intelligence.
+
+It is designed to answer:
+
+> Which agencies, opportunities, contracts, and prime contractors should I focus on over the next 12-24 months?
 
 ## Phase 1 Scope
 
@@ -9,51 +13,71 @@ Local-first Phase 1 MVP for exploring synthetic government contracting spending,
 - Executive Overview dashboard
 - Agency Spending Explorer dashboard
 - Prime Contractor Intelligence dashboard
-- Configuration-driven paths, labels, fiscal years, and scoring weights
+- Configuration-driven scoring and dashboard settings
+- CSV exports for dashboard tables
 - Windows-friendly local development
-- No live API calls
+- No live API calls from dashboard runtime
 
 All included data is fictional sample data for product demonstration only.
 
 ## Quick Start
 
 ```powershell
-py -m venv .venv
+python -m venv .venv
 .\.venv\Scripts\python -m pip install -r requirements.txt
-.\.venv\Scripts\python -m govcon_radar.seed
-.\.venv\Scripts\python -m streamlit run govcon_radar/app.py --server.address 127.0.0.1
+.\.venv\Scripts\python scripts\build_db.py
+.\.venv\Scripts\python -m streamlit run app.py --server.address 127.0.0.1
 ```
 
 Open the Streamlit URL shown in the terminal, usually `http://127.0.0.1:8501`.
 
 ## Dashboards
 
-- **Executive Overview**: fiscal-year KPIs, agency obligation mix, capability pipeline, and top synthetic partner candidates.
-- **Agency Spending Explorer**: agency filter, vehicle mix, obligation ranking, and spending detail table.
-- **Prime Contractor Intelligence**: partner score filtering, contractor score scatter, and synthetic contractor profiles.
+- **Executive Overview**: fiscal-year KPIs, spending by agency, capability pipeline, top primes, and immediate market focus recommendations.
+- **Agency Spending Explorer**: filters for agency, office, NAICS, PSC, keyword, and date range with spending detail export.
+- **Prime Contractor Intelligence**: partner priority scoring, score explanations, prime profiles, and exportable target list.
 
 ## Configuration
 
-Edit `config/app.yaml` to change the generated database path, sample CSV paths, default fiscal year, dashboard limits, and scoring weights. The app reads this file at startup and seeds the DuckDB database automatically when `data/govcon_radar.duckdb` does not exist.
+- `config/app.yaml`: app settings, database path, dashboard defaults, target agencies, and capability keywords.
+- `config/scoring_weights.yml`: configurable scoring weights from the XML scoring model.
+- `.env.example`: safe placeholder for future API ingestion variables.
+
+Phase 1 reads local CSV files and DuckDB only. USAspending and SAM.gov scripts are placeholders for future ingestion and are not called by Streamlit pages.
 
 ## Development Checks
 
 ```powershell
-.\.venv\Scripts\python -m compileall govcon_radar
+.\.venv\Scripts\python -m compileall app.py src scripts pages
 .\.venv\Scripts\python -m pytest
 ```
 
 ## Project Layout
 
 ```text
-config/app.yaml                  Application configuration
-data/sample/*.csv                Local synthetic datasets
-data/govcon_radar.duckdb         Generated local DuckDB database
-docs/implementation_plan.md      Phase 1 planning notes
-govcon_radar/                    Application package
-tests/                           Data-layer tests
+app.py                         Streamlit entrypoint
+config/                        YAML configuration
+data/sample/                   Schema-matching synthetic CSVs
+data/govcon_radar.duckdb       Generated local DuckDB database
+docs/implementation_plan.md    Phase 1 planning notes
+pages/                         Streamlit dashboard modules
+scripts/build_db.py            Manual CSV to DuckDB loader
+scripts/ingest_*.py            Phase 2-safe placeholders
+src/                           Data, scoring, chart, and export helpers
+tests/                         Data-layer tests
+*.xml                          Source specifications
+```
+
+## API Key Safety
+
+Create a `.env` file locally for future ingestion work, but never commit it.
+
+```env
+SAM_API_KEY=replace_with_your_key
+USA_SPENDING_BASE_URL=https://api.usaspending.gov
+SAM_BASE_URL=https://api.sam.gov/prod/opportunities/v2/search
 ```
 
 ## Data Boundary
 
-Phase 1 does not call SAM.gov, USAspending, FPDS, agency APIs, or third-party data providers. The local DuckDB database is generated from CSV files in `data/sample`.
+Phase 1 does not call SAM.gov, USAspending, FPDS, agency APIs, or third-party data providers during dashboard usage. The local DuckDB database is generated from CSV files in `data/sample`.

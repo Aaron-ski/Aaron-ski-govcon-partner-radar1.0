@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ingestion_pipeline project="GovCon Partner Radar">
+  <principle>Never call live APIs from dashboard pages. Ingest first, store locally, then query DuckDB.</principle>
+  <phase_1_manual_csv>
+    <step>Create sample CSV files for agencies, vendors, vehicles, awards, opportunities, and capture_notes.</step>
+    <step>Run scripts/build_db.py to load CSVs into DuckDB.</step>
+    <step>Validate schemas before load.</step>
+  </phase_1_manual_csv>
+  <phase_2_usaspending>
+    <step>Use USAspending.gov API v2 to retrieve award/spending data for target agencies and capability keywords.</step>
+    <step>Persist raw responses to data/raw/usaspending/ as JSON or Parquet.</step>
+    <step>Normalize to awards.csv-compatible schema.</step>
+    <step>Append/update DuckDB tables during scheduled refresh.</step>
+  </phase_2_usaspending>
+  <phase_2_sam>
+    <step>Use SAM.gov Opportunities API with SAM_API_KEY environment variable.</step>
+    <step>Persist raw responses to data/raw/sam/.</step>
+    <step>Normalize records into opportunities table.</step>
+    <step>Run scoring after ingest, not inside dashboard page load.</step>
+  </phase_2_sam>
+  <scheduling_options>
+    <windows>Use Windows Task Scheduler to run python scripts/refresh_all.py daily or weekly.</windows>
+    <mac_linux>Use cron or launchd.</mac_linux>
+    <manual>Provide Makefile or simple commands for manual refresh.</manual>
+  </scheduling_options>
+  <api_key_handling>
+    <file name=".env.example"><![CDATA[
+SAM_API_KEY=replace_with_your_key
+USA_SPENDING_BASE_URL=https://api.usaspending.gov
+SAM_BASE_URL=https://api.sam.gov/prod/opportunities/v2/search
+]]></file>
+    <file name=".gitignore"><![CDATA[
+.env
+data/raw/
+data/processed/
+data/*.duckdb
+__pycache__/
+.venv/
+]]></file>
+  </api_key_handling>
+  <sample_csv_templates>
+    <csv name="agencies.csv">agency_id,agency_name,sub_agency,office,priority_tier</csv>
+    <csv name="vendors.csv">vendor_id,vendor_name,uei,vendor_type</csv>
+    <csv name="contract_vehicles.csv">vehicle_id,vehicle_name,vehicle_type,owning_agency</csv>
+    <csv name="awards.csv">award_id,agency_id,vendor_id,vehicle_id,contract_name,award_value,start_date,end_date,naics,psc,keywords,description</csv>
+    <csv name="opportunities.csv">opportunity_id,agency_id,title,notice_type,posted_date,due_date,naics,psc,keywords,url,description</csv>
+    <csv name="capture_notes.csv">note_id,related_type,related_id,note_date,status,next_action,notes</csv>
+  </sample_csv_templates>
+  <acceptance_criteria>
+    <criterion>Refresh jobs can be run without launching Streamlit.</criterion>
+    <criterion>Dashboard remains fast because it queries local DuckDB only.</criterion>
+    <criterion>Missing API key does not prevent sample dashboard from running.</criterion>
+  </acceptance_criteria>
+</ingestion_pipeline>

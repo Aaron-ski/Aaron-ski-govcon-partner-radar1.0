@@ -36,6 +36,23 @@ def executive_kpis(fiscal_year: int, settings: Settings | None = None) -> dict[s
     }
 
 
+def opportunity_kpis(settings: Settings | None = None) -> dict[str, float]:
+    df = _fetch_df(
+        """
+        SELECT
+            COUNT(*) AS opportunity_count,
+            AVG(total_score) AS average_opportunity_score
+        FROM opportunity_scores
+        """,
+        settings=settings,
+    )
+    row = df.iloc[0]
+    return {
+        "opportunity_count": float(row["opportunity_count"] or 0),
+        "average_opportunity_score": float(row["average_opportunity_score"] or 0),
+    }
+
+
 def agency_summary(fiscal_year: int, settings: Settings | None = None) -> pd.DataFrame:
     return _fetch_df(
         """
@@ -50,17 +67,19 @@ def agency_summary(fiscal_year: int, settings: Settings | None = None) -> pd.Dat
 
 
 def spending_by_vehicle(fiscal_year: int, agency: str | None = None, settings: Settings | None = None) -> pd.DataFrame:
-    where = "WHERE fiscal_year = ?"
+    where = "WHERE CAST(strftime(a.start_date, '%Y') AS INTEGER) = ?"
     params: list[object] = [fiscal_year]
     if agency and agency != "All Agencies":
-        where += " AND agency = ?"
+        where += " AND g.agency_name = ?"
         params.append(agency)
     return _fetch_df(
         f"""
-        SELECT contract_vehicle, SUM(obligations) AS obligations, SUM(award_count) AS award_count
-        FROM agency_spending
+        SELECT cv.vehicle_name AS contract_vehicle, SUM(a.award_value) AS obligations, COUNT(*) AS award_count
+        FROM awards a
+        JOIN agencies g ON a.agency_id = g.agency_id
+        JOIN contract_vehicles cv ON a.vehicle_id = cv.vehicle_id
         {where}
-        GROUP BY contract_vehicle
+        GROUP BY cv.vehicle_name
         ORDER BY obligations DESC
         """,
         params,
@@ -68,17 +87,51 @@ def spending_by_vehicle(fiscal_year: int, agency: str | None = None, settings: S
     )
 
 
-def spending_detail(fiscal_year: int, agency: str | None = None, settings: Settings | None = None) -> pd.DataFrame:
-    where = "WHERE fiscal_year = ?"
+def spending_detail(
+    fiscal_year: int,
+    agency: str | None = None,
+    office: str | None = None,
+    naics: str | None = None,
+    psc: str | None = None,
+    keyword: str | None = None,
+    settings: Settings | None = None,
+) -> pd.DataFrame:
+    where = "WHERE CAST(strftime(a.start_date, '%Y') AS INTEGER) = ?"
     params: list[object] = [fiscal_year]
     if agency and agency != "All Agencies":
-        where += " AND agency = ?"
+        where += " AND g.agency_name = ?"
         params.append(agency)
+    if office and office != "All Offices":
+        where += " AND g.office = ?"
+        params.append(office)
+    if naics and naics != "All NAICS":
+        where += " AND a.naics = ?"
+        params.append(naics)
+    if psc and psc != "All PSC":
+        where += " AND a.psc = ?"
+        params.append(psc)
+    if keyword:
+        where += " AND LOWER(a.keywords || ' ' || a.description) LIKE ?"
+        params.append(f"%{keyword.lower()}%")
     return _fetch_df(
         f"""
-        SELECT agency, subagency, naics, psc, contract_vehicle, obligations, award_count,
-               small_business_obligations, competition_rate
-        FROM agency_spending
+        SELECT
+            g.agency_name AS agency,
+            g.sub_agency AS subagency,
+            g.office,
+            v.vendor_name AS vendor,
+            cv.vehicle_name AS contract_vehicle,
+            a.contract_name,
+            a.award_value AS obligations,
+            a.start_date,
+            a.end_date,
+            a.naics,
+            a.psc,
+            a.keywords
+        FROM awards a
+        JOIN agencies g ON a.agency_id = g.agency_id
+        JOIN vendors v ON a.vendor_id = v.vendor_id
+        JOIN contract_vehicles cv ON a.vehicle_id = cv.vehicle_id
         {where}
         ORDER BY obligations DESC
         """,
@@ -96,6 +149,19 @@ def contractor_rankings(settings: Settings | None = None) -> pd.DataFrame:
                composite_score, notes
         FROM contractor_rankings
         ORDER BY composite_score DESC, total_obligations DESC
+        """,
+        settings=settings,
+    )
+
+
+def opportunity_scores(settings: Settings | None = None) -> pd.DataFrame:
+    return _fetch_df(
+        """
+        SELECT opportunity_id, title, agency, office, notice_type, posted_date, due_date,
+               naics, psc, keywords, url, agency_relevance, technical_match,
+               contract_size_fit, teaming_potential, timing_score, total_score
+        FROM opportunity_scores
+        ORDER BY total_score DESC, due_date ASC
         """,
         settings=settings,
     )

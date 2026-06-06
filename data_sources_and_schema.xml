@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data_sources_and_schema project="GovCon Partner Radar">
+  <data_sources>
+    <source id="usa_spending" phase="2">
+      <name>USAspending.gov API</name>
+      <purpose>Federal award and spending trend data.</purpose>
+      <note>Use API v2 endpoints. Pull data on schedule, persist locally, then query DuckDB.</note>
+    </source>
+    <source id="sam_opportunities" phase="2">
+      <name>SAM.gov Opportunities API</name>
+      <purpose>Active, archived, and recent federal contract opportunities.</purpose>
+      <note>Requires SAM.gov API key. Store key in SAM_API_KEY environment variable.</note>
+    </source>
+    <source id="manual_csv" phase="1">
+      <name>Manual CSV Imports</name>
+      <purpose>Immediate MVP testing, sample data, and ad hoc enrichment.</purpose>
+    </source>
+  </data_sources>
+  <erd><![CDATA[
+agencies 1---many awards
+agencies 1---many opportunities
+vendors 1---many awards
+contract_vehicles 1---many awards
+awards 1---0..1 recompetes
+awards many---many opportunity_scores through related opportunity logic
+vendors 1---many partner_scores
+opportunities 1---1 opportunity_scores
+awards/opportunities 1---many capture_notes
+]]></erd>
+  <tables>
+    <table name="agencies" primary_key="agency_id">
+      <column name="agency_id" type="TEXT" required="true" example="DON"/>
+      <column name="agency_name" type="TEXT" example="Department of the Navy"/>
+      <column name="sub_agency" type="TEXT" example="NAVSEA"/>
+      <column name="office" type="TEXT" example="Team Submarine"/>
+      <column name="priority_tier" type="INTEGER" example="1"/>
+    </table>
+    <table name="vendors" primary_key="vendor_id">
+      <column name="vendor_id" type="TEXT" required="true"/>
+      <column name="vendor_name" type="TEXT"/>
+      <column name="uei" type="TEXT"/>
+      <column name="vendor_type" type="TEXT" example="Prime, Small Business, Large Business"/>
+    </table>
+    <table name="contract_vehicles" primary_key="vehicle_id">
+      <column name="vehicle_id" type="TEXT" required="true"/>
+      <column name="vehicle_name" type="TEXT"/>
+      <column name="vehicle_type" type="TEXT" example="IDIQ, BPA, GWAC, Standalone"/>
+      <column name="owning_agency" type="TEXT"/>
+    </table>
+    <table name="awards" primary_key="award_id">
+      <column name="award_id" type="TEXT" required="true"/>
+      <column name="agency_id" type="TEXT" foreign_key="agencies.agency_id"/>
+      <column name="vendor_id" type="TEXT" foreign_key="vendors.vendor_id"/>
+      <column name="vehicle_id" type="TEXT" foreign_key="contract_vehicles.vehicle_id"/>
+      <column name="contract_name" type="TEXT"/>
+      <column name="award_value" type="DOUBLE"/>
+      <column name="start_date" type="DATE"/>
+      <column name="end_date" type="DATE"/>
+      <column name="naics" type="TEXT"/>
+      <column name="psc" type="TEXT"/>
+      <column name="keywords" type="TEXT"/>
+      <column name="description" type="TEXT"/>
+    </table>
+    <table name="opportunities" primary_key="opportunity_id">
+      <column name="opportunity_id" type="TEXT" required="true"/>
+      <column name="agency_id" type="TEXT" foreign_key="agencies.agency_id"/>
+      <column name="title" type="TEXT"/>
+      <column name="notice_type" type="TEXT"/>
+      <column name="posted_date" type="DATE"/>
+      <column name="due_date" type="DATE"/>
+      <column name="naics" type="TEXT"/>
+      <column name="psc" type="TEXT"/>
+      <column name="keywords" type="TEXT"/>
+      <column name="url" type="TEXT"/>
+      <column name="description" type="TEXT"/>
+    </table>
+    <table name="recompetes" primary_key="recompete_id">
+      <column name="recompete_id" type="TEXT" required="true"/>
+      <column name="award_id" type="TEXT" foreign_key="awards.award_id"/>
+      <column name="months_remaining" type="INTEGER"/>
+      <column name="recompete_window" type="TEXT" example="6, 12, 24 months"/>
+      <column name="recompete_probability" type="DOUBLE"/>
+      <column name="incumbent" type="TEXT"/>
+    </table>
+    <table name="opportunity_scores" primary_key="opportunity_id">
+      <column name="opportunity_id" type="TEXT" foreign_key="opportunities.opportunity_id"/>
+      <column name="agency_relevance" type="INTEGER"/>
+      <column name="technical_match" type="INTEGER"/>
+      <column name="contract_size_fit" type="INTEGER"/>
+      <column name="teaming_potential" type="INTEGER"/>
+      <column name="timing_score" type="INTEGER"/>
+      <column name="total_score" type="INTEGER"/>
+    </table>
+    <table name="partner_scores" primary_key="partner_score_id">
+      <column name="partner_score_id" type="TEXT" required="true"/>
+      <column name="vendor_id" type="TEXT" foreign_key="vendors.vendor_id"/>
+      <column name="agency_id" type="TEXT" foreign_key="agencies.agency_id"/>
+      <column name="award_count" type="INTEGER"/>
+      <column name="total_award_value" type="DOUBLE"/>
+      <column name="capability_alignment" type="INTEGER"/>
+      <column name="expiring_contract_count" type="INTEGER"/>
+      <column name="teaming_attractiveness_score" type="INTEGER"/>
+    </table>
+    <table name="capture_notes" primary_key="note_id">
+      <column name="note_id" type="TEXT" required="true"/>
+      <column name="related_type" type="TEXT" example="award, opportunity, vendor"/>
+      <column name="related_id" type="TEXT"/>
+      <column name="note_date" type="DATE"/>
+      <column name="status" type="TEXT" example="Research, Watch, Contact, Pursue, Pass"/>
+      <column name="next_action" type="TEXT"/>
+      <column name="notes" type="TEXT"/>
+    </table>
+  </tables>
+</data_sources_and_schema>

@@ -1,0 +1,9 @@
+agency_id,agency_name,sub_agency,office,priority_tier
+DON,Department of the Navy,NAVSEA,Team Submarine,1
+NAVSEA,Department of the Navy,NAVSEA,SEA 05 Technology Office,1
+CDAO,Department of Defense,CDAO,Data Accelerator Office,1
+DISA,Department of Defense,DISA,Cloud and Compute Center,1
+USAF,Department of the Air Force,Air Force Life Cycle Management Center,Digital Directorate,2
+ARMY,Department of the Army,Army Contracting Command,Enterprise Cloud Office,2
+DHA,Department of Defense,Defense Health Agency,Health IT Modernization Office,2
+GSA,General Services Administration,Federal Acquisition Service,Technology Transformation Services,3

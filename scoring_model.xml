@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scoring_model project="GovCon Partner Radar">
+  <recommendation>Use editable YAML config for weights. Default weights should match the model below, but users should be able to tune them without editing Python code.</recommendation>
+  <opportunity_score max="100">
+    <component name="agency_relevance" max="25">
+      <rule>Tier 1 agency = 25; Tier 2 = 15; other DoD = 10; civilian = 5.</rule>
+    </component>
+    <component name="technical_capability_match" max="25">
+      <rule>Score based on keyword matches across title, description, NAICS, PSC, and tags.</rule>
+    </component>
+    <component name="contract_size_fit" max="20">
+      <rule>For solo founder: ideal initial target is small subcontracting, pilot, prototype, BPA call, task order, or niche analytics support. Penalize very large full-and-open efforts unless teaming potential is high.</rule>
+    </component>
+    <component name="teaming_potential" max="20">
+      <rule>Score higher when incumbent or likely prime exists, award is too large for solo prime, and work aligns with niche capability.</rule>
+    </component>
+    <component name="timing_recompete_window" max="10">
+      <rule>Due soon but actionable = high. Expiring contracts within 6-18 months = high. Already expired or due immediately = lower.</rule>
+    </component>
+  </opportunity_score>
+  <teaming_score max="100">
+    <component name="agency_relationship" max="30"/>
+    <component name="capability_alignment" max="25"/>
+    <component name="repeated_winner" max="20"/>
+    <component name="expiring_contracts" max="15"/>
+    <component name="small_business_partner_likelihood" max="10"/>
+  </teaming_score>
+  <recompete_score max="100">
+    <component name="months_remaining_fit" max="35"/>
+    <component name="target_agency_relevance" max="25"/>
+    <component name="technical_match" max="25"/>
+    <component name="incumbent_partner_potential" max="15"/>
+  </recompete_score>
+  <example_scoring_weights_yaml><![CDATA[
+opportunity_score:
+  agency_relevance: 25
+  technical_capability_match: 25
+  contract_size_fit: 20
+  teaming_potential: 20
+  timing_recompete_window: 10
+agency_tiers:
+  tier_1: ["Department of the Navy", "NAVSEA", "Team Submarine", "CDAO", "DISA"]
+  tier_2: ["Air Force", "Army", "DoD"]
+keywords:
+  high_value: ["data analytics", "Power BI", "AI", "machine learning", "knowledge management", "SharePoint", "RAG", "LLM", "digital transformation", "data governance"]
+size_fit:
+  ideal_min: 50000
+  ideal_max: 3000000
+]]></example_scoring_weights_yaml>
+  <acceptance_criteria>
+    <criterion>Scores are transparent and explainable in the UI.</criterion>
+    <criterion>User can see score component breakdown.</criterion>
+    <criterion>Weights can be modified in config/scoring_weights.yml.</criterion>
+  </acceptance_criteria>
+</scoring_model>

@@ -6,6 +6,7 @@ from govcon_radar.config import Settings
 from govcon_radar.queries import contractor_rankings
 from govcon_radar.ui.charts import contractor_score_scatter
 from govcon_radar.ui.layout import format_currency, render_page_header
+from src.exports import csv_download
 
 
 def render_prime_contractor_intelligence(settings: Settings) -> None:
@@ -32,23 +33,31 @@ def render_prime_contractor_intelligence(settings: Settings) -> None:
     st.subheader("Partner score vs. obligations")
     st.plotly_chart(contractor_score_scatter(filtered), use_container_width=True)
 
+    with st.expander("Score explanation", expanded=True):
+        st.write(
+            "Partner score combines agency relationship, capability alignment, repeated wins, "
+            "expiring contract timing, and likely subcontractor need using configurable YAML weights."
+        )
+
     st.subheader("Prime contractor profiles")
+    profiles = filtered[
+        [
+            "contractor",
+            "headquarters",
+            "primary_agency",
+            "core_capability",
+            "total_obligations",
+            "small_business_partnering_rate",
+            "past_performance_score",
+            "cyber_readiness_score",
+            "agency_alignment_score",
+            "composite_score",
+            "notes",
+        ]
+    ]
     st.dataframe(
-        filtered[
-            [
-                "contractor",
-                "headquarters",
-                "primary_agency",
-                "core_capability",
-                "total_obligations",
-                "small_business_partnering_rate",
-                "past_performance_score",
-                "cyber_readiness_score",
-                "agency_alignment_score",
-                "composite_score",
-                "notes",
-            ]
-        ],
+        profiles,
         use_container_width=True,
         hide_index=True,
     )
+    csv_download("Export prime targets", profiles, "prime_contractor_targets.csv")

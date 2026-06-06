@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<implementation_plan project="GovCon Partner Radar">
+  <phase number="1" name="Local MVP">
+    <task>Create repository structure.</task>
+    <task>Create sample CSVs with realistic mock records.</task>
+    <task>Create DuckDB build script.</task>
+    <task>Create Streamlit multipage dashboard.</task>
+    <task>Create config-driven scoring.</task>
+    <task>Add capture log and CSV export.</task>
+    <acceptance_criteria>App runs locally from sample data and supports all six core dashboards plus capture log.</acceptance_criteria>
+  </phase>
+  <phase number="2" name="Automated Ingestion">
+    <task>Add USAspending ingestion script.</task>
+    <task>Add SAM.gov ingestion script.</task>
+    <task>Add refresh_all.py orchestration script.</task>
+    <task>Add local scheduling instructions.</task>
+    <acceptance_criteria>Data can be refreshed locally without dashboard API calls.</acceptance_criteria>
+  </phase>
+  <phase number="3" name="Recompete and Partner Analytics">
+    <task>Improve recompete detection.</task>
+    <task>Add partner priority ranking.</task>
+    <task>Add score explanations and recommended next action.</task>
+    <acceptance_criteria>User can produce prioritized agency, opportunity, prime, and recompete target lists.</acceptance_criteria>
+  </phase>
+  <phase number="4" name="Advanced Intelligence">
+    <task>Add forecasting and trend detection.</task>
+    <task>Add better entity resolution for vendor names.</task>
+    <task>Add contract vehicle reference enrichment.</task>
+    <task>Add recommendation engine.</task>
+  </phase>
+  <definition_of_done>
+    <item>README explains setup, sample data, API key safety, refresh workflow, and roadmap.</item>
+    <item>All pages render without errors.</item>
+    <item>Tests or validation checks confirm expected columns exist.</item>
+    <item>Repo is safe to publish without secrets or raw data.</item>
+  </definition_of_done>
+</implementation_plan>
