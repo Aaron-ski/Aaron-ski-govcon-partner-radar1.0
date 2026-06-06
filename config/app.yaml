@@ -1,0 +1,31 @@
+app:
+  title: "GovCon Partner Radar"
+  subtitle: "Phase 1 local intelligence workspace"
+  default_fiscal_year: 2025
+  fiscal_years: [2023, 2024, 2025]
+  currency_units: "USD"
+
+database:
+  path: "data/govcon_radar.duckdb"
+
+sample_data:
+  agency_spending: "data/sample/agency_spending.csv"
+  prime_contractors: "data/sample/prime_contractors.csv"
+  capability_markets: "data/sample/capability_markets.csv"
+
+scoring:
+  weights:
+    obligations: 0.30
+    agency_alignment: 0.25
+    small_business_partnering: 0.20
+    past_performance: 0.15
+    cyber_readiness: 0.10
+
+dashboards:
+  executive_overview:
+    top_agencies_limit: 6
+    top_contractors_limit: 8
+  agency_spending_explorer:
+    default_agency: "Department of Defense"
+  prime_contractor_intelligence:
+    minimum_partner_score: 70
