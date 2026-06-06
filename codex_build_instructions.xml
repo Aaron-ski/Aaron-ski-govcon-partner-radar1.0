@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<codex_build_instructions project="GovCon Partner Radar">
+  <instruction_to_codex>
+    Build the MVP as a working local Streamlit application using this XML/Markdown file series as the source of truth. Prioritize a runnable Phase 1 app before adding API ingestion.
+  </instruction_to_codex>
+  <build_order>
+    <step order="1">Create repository tree exactly as described in technical_architecture.xml.</step>
+    <step order="2">Create requirements.txt with streamlit, duckdb, pandas, plotly, pyyaml, python-dotenv, requests, pyarrow.</step>
+    <step order="3">Create .gitignore and .env.example.</step>
+    <step order="4">Create sample CSVs under data/sample.</step>
+    <step order="5">Create scripts/build_db.py to load sample CSVs to DuckDB.</step>
+    <step order="6">Create src/db.py, src/scoring.py, src/charts.py, src/exports.py.</step>
+    <step order="7">Create Streamlit app and pages.</step>
+    <step order="8">Add visible score explanations and CSV downloads.</step>
+    <step order="9">Add placeholder ingestion scripts that are safe and do not require keys for sample mode.</step>
+    <step order="10">Update README with exact commands.</step>
+  </build_order>
+  <initial_commands><![CDATA[
+python -m venv .venv
+.venv\Scripts\activate   # Windows PowerShell: .\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python scripts/build_db.py
+streamlit run app.py
+]]></initial_commands>
+  <critical_constraints>
+    <constraint>Do not put API keys in code, tests, sample files, screenshots, or README examples.</constraint>
+    <constraint>Do not call USAspending or SAM APIs from Streamlit page load.</constraint>
+    <constraint>Sample data must be easy to delete and replace.</constraint>
+    <constraint>Use clear comments where Phase 2 API logic will be expanded.</constraint>
+    <constraint>Favor simple, readable code over excessive abstraction.</constraint>
+  </critical_constraints>
+  <sample_records_requirement>
+    <record>Create at least 8 agencies, 12 vendors, 20 awards, 12 opportunities, 6 vehicles, and 6 capture notes.</record>
+    <record>Include Navy, NAVSEA, Team Submarine, CDAO, DISA, Air Force, Army, and one civilian agency.</record>
+    <record>Use fictionalized or clearly sample records where needed.</record>
+  </sample_records_requirement>
+  <acceptance_criteria>
+    <criterion>Codex produces a runnable local app in one pass or with minimal follow-up.</criterion>
+    <criterion>All pages render from DuckDB.</criterion>
+    <criterion>README accurately describes local setup and future API ingestion.</criterion>
+  </acceptance_criteria>
+</codex_build_instructions>

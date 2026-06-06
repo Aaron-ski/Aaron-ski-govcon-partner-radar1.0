@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project_overview project="GovCon Partner Radar" version="0.1.0">
+  <mission>
+    Build a local-first government contracting market intelligence MVP that helps a solo founder decide which agencies, opportunities, contracts, and prime contractors to prioritize over the next 12-24 months.
+  </mission>
+  <positioning>
+    <not_goal>Do not replicate GovWin, HigherGov, or enterprise market-intelligence platforms.</not_goal>
+    <goal>Provide a focused, founder-operated decision tool for Navy, DoD, CDAO, AI, data, knowledge management, and digital transformation opportunities.</goal>
+  </positioning>
+  <target_user>
+    <persona>Solo founder with DoD/Navy, Team Submarine, acquisition analytics, knowledge management, Power BI, SharePoint, data engineering, and AI implementation experience.</persona>
+    <decision_question>Where should I spend limited business-development time?</decision_question>
+  </target_user>
+  <target_agencies>
+    <primary>Department of the Navy</primary>
+    <primary>NAVSEA</primary>
+    <primary>Team Submarine</primary>
+    <primary>CDAO</primary>
+    <primary>DISA</primary>
+    <secondary>Air Force</secondary>
+    <secondary>Army</secondary>
+    <secondary>DoD-wide organizations</secondary>
+    <secondary>Federal civilian agencies</secondary>
+  </target_agencies>
+  <capability_areas>
+    <area>Data Analytics</area><area>Data Engineering</area><area>Business Intelligence</area><area>Power BI</area><area>Tableau</area><area>AI/ML</area><area>Generative AI</area><area>LLM Enablement</area><area>RAG Solutions</area><area>Knowledge Management</area><area>SharePoint</area><area>Microsoft 365</area><area>Digital Transformation</area><area>Data Governance</area><area>Acquisition Analytics</area><area>Decision Support</area><area>Data Visualization</area><area>Enterprise Search</area><area>Workflow Automation</area><area>Power Platform</area>
+  </capability_areas>
+  <mvp_principles>
+    <principle>Local-first: dashboard reads from DuckDB, not live APIs.</principle>
+    <principle>Modular data: sample data can be removed and replaced with API-derived data.</principle>
+    <principle>Configurable scoring: weights and keyword lists live in config files.</principle>
+    <principle>Founder workflow: include manual capture notes and target-list export.</principle>
+    <principle>Low cost: run locally on Windows, macOS, or Linux.</principle>
+  </mvp_principles>
+  <acceptance_criteria>
+    <criterion>Codex can scaffold a working Streamlit app from this file series.</criterion>
+    <criterion>App runs locally using sample CSV data and DuckDB.</criterion>
+    <criterion>No API key is committed to GitHub.</criterion>
+    <criterion>Dashboard pages show agency spending, primes, recompetes, partners, and opportunities.</criterion>
+    <criterion>User can export target lists to CSV.</criterion>
+  </acceptance_criteria>
+</project_overview>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<partner_radar_logic project="GovCon Partner Radar">
+  <objective>Identify prime contractors worth monitoring or approaching for teaming based on public award patterns and target capability alignment.</objective>
+  <ranking_inputs>
+    <input>Top 25 primes by agency</input>
+    <input>Repeated winners in target offices</input>
+    <input>Vendors with multiple awards in target capability areas</input>
+    <input>Vendors with contracts expiring in 6, 12, and 24 months</input>
+    <input>Vendors with large contracts that may require subcontractor support</input>
+  </ranking_inputs>
+  <partner_priority_formula><![CDATA[
+Partner Priority Score =
+  agency_relationship_score * 0.30 +
+  capability_alignment_score * 0.25 +
+  repeated_winner_score * 0.20 +
+  expiring_contract_score * 0.15 +
+  likely_subcontractor_need_score * 0.10
+]]></partner_priority_formula>
+  <heuristics>
+    <heuristic>If a vendor has 3+ awards in a target agency, mark as repeated winner.</heuristic>
+    <heuristic>If a vendor has awards over $10M with target keywords, mark as likely prime/team lead.</heuristic>
+    <heuristic>If relevant contracts end in 6-18 months, increase priority for early outreach.</heuristic>
+    <heuristic>If vendor supports Navy, NAVSEA, CDAO, or DISA and has AI/data awards, increase priority.</heuristic>
+    <heuristic>If vendor is a small business with repeated wins, consider competitor/partner ambiguity.</heuristic>
+  </heuristics>
+  <outputs>
+    <output>Partner Priority Ranking</output>
+    <output>Top agencies supported by each prime</output>
+    <output>Relevant expiring contracts</output>
+    <output>Suggested outreach rationale</output>
+  </outputs>
+  <acceptance_criteria>
+    <criterion>Partner Radar displays top ranked vendors with score explanations.</criterion>
+    <criterion>User can export partner targets to CSV.</criterion>
+    <criterion>User can add capture notes for a vendor.</criterion>
+  </acceptance_criteria>
+</partner_radar_logic>
