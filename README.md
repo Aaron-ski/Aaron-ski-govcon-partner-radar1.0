@@ -68,6 +68,7 @@ Refresh date: `2026-06-06`
 Sources and boundaries:
 
 - Award rows: curated from public USAspending.gov API results for Department of Defense contract awards.
+- Current award-year coverage: 45 records with 2025 start dates and 55 records with 2026 start dates.
 - Opportunity rows: synthetic SAM-style records used to complete the demo workflow without requiring a SAM.gov API key.
 - Not committed: `.env`, API keys, raw downloads, private capture notes, generated local DuckDB files.
 

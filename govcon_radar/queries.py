@@ -17,11 +17,11 @@ def executive_kpis(fiscal_year: int, settings: Settings | None = None) -> dict[s
     df = _fetch_df(
         """
         SELECT
-            SUM(obligations) AS obligations,
-            SUM(award_count) AS award_count,
-            SUM(small_business_obligations) AS small_business_obligations,
-            AVG(competition_rate) AS competition_rate
-        FROM agency_spending
+            COALESCE(SUM(obligations), 0) AS obligations,
+            COALESCE(SUM(award_count), 0) AS award_count,
+            COALESCE(SUM(small_business_obligations), 0) AS small_business_obligations,
+            COALESCE(AVG(competition_rate), 0) AS competition_rate
+        FROM agency_year_summary
         WHERE fiscal_year = ?
         """,
         [fiscal_year],

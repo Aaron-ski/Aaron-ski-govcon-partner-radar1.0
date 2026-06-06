@@ -47,16 +47,22 @@ KEYWORDS = [
 ]
 
 
-def _post_usaspending(page: int, limit: int = 100) -> list[dict[str, Any]]:
+def _post_usaspending(
+    page: int,
+    limit: int = 100,
+    start_date: str = "2024-10-01",
+    end_date: str = "2026-06-06",
+    order: str = "desc",
+) -> list[dict[str, Any]]:
     payload = {
         "subawards": False,
         "limit": limit,
         "page": page,
-        "sort": "Award Amount",
-        "order": "desc",
+        "sort": "Start Date",
+        "order": order,
         "filters": {
             "award_type_codes": ["A", "B", "C", "D"],
-            "time_period": [{"start_date": "2023-10-01", "end_date": "2026-06-06"}],
+            "time_period": [{"start_date": start_date, "end_date": end_date}],
             "agencies": [{"type": "awarding", "tier": "toptier", "name": "Department of Defense"}],
             "award_amounts": [{"lower_bound": 50000}],
         },
@@ -80,14 +86,30 @@ def _post_usaspending(page: int, limit: int = 100) -> list[dict[str, Any]]:
     return response.json().get("results", [])
 
 
-def fetch_awards() -> list[dict[str, Any]]:
+def _fetch_award_window(start_date: str, end_date: str, minimum: int, order: str = "desc") -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
-    for page in range(1, 4):
-        rows.extend(_post_usaspending(page))
-        if len(rows) >= 120:
+    seen_ids: set[str] = set()
+    for page in range(1, 16):
+        for row in _post_usaspending(page, start_date=start_date, end_date=end_date, order=order):
+            award_id = str(row.get("Award ID") or "")
+            row_start = str(row.get("Start Date") or "")
+            if award_id and award_id not in seen_ids and start_date <= row_start <= end_date:
+                rows.append(row)
+                seen_ids.add(award_id)
+        if len(rows) >= minimum:
             break
+    return rows
+
+
+def fetch_awards() -> list[dict[str, Any]]:
+    fy25_rows = _fetch_award_window("2025-01-01", "2025-12-31", minimum=50, order="desc")
+    fy26_rows = _fetch_award_window("2026-01-01", "2026-12-31", minimum=50, order="desc")
+    rows = [*fy26_rows[:55], *fy25_rows[:55]]
     if len(rows) < 100:
-        raise RuntimeError(f"USAspending returned only {len(rows)} awards; need at least 100.")
+        raise RuntimeError(
+            f"USAspending returned only {len(rows)} recent-start awards "
+            f"({len(fy25_rows)} in 2025, {len(fy26_rows)} in 2026); need at least 100."
+        )
     return rows[:120]
 
 
@@ -136,7 +158,7 @@ def build_demo() -> None:
             }
         )
 
-    vendor_rows = list(vendors_by_name.values())[:40]
+    vendor_rows = list(vendors_by_name.values())[:120]
     valid_vendor_ids = {row["vendor_id"] for row in vendor_rows}
     award_rows = [row for row in award_rows if row["vendor_id"] in valid_vendor_ids][:100]
 
