@@ -16,8 +16,9 @@ def test_seed_database_creates_queryable_tables(tmp_path):
     settings = _tmp_settings(tmp_path)
 
     database_path = seed_database(settings)
-    kpis = executive_kpis(2025, settings)
-    agencies = agency_summary(2025, settings)
+    fiscal_year = settings.default_fiscal_year
+    kpis = executive_kpis(fiscal_year, settings)
+    agencies = agency_summary(fiscal_year, settings)
     contractors = contractor_rankings(settings)
 
     assert database_path.exists()

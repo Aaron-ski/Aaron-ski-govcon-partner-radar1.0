@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import os
 import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -10,7 +11,7 @@ from govcon_radar.db import seed_database
 
 
 def main() -> None:
-    database_path = seed_database(load_settings())
+    database_path = seed_database(load_settings(os.environ.get("GOVCON_RADAR_CONFIG")))
     print(f"Built DuckDB database at {database_path}")
 
 

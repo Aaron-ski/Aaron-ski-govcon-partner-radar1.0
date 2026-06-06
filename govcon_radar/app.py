@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import os
 import sys
 
 import streamlit as st
@@ -8,7 +9,7 @@ import streamlit as st
 if __package__ is None or __package__ == "":
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from govcon_radar.config import load_settings
+from govcon_radar.config import PROJECT_ROOT, load_settings
 from govcon_radar.db import ensure_database
 from govcon_radar.ui.layout import render_sidebar
 from govcon_radar.ui.pages.agency_spending_explorer import render_agency_spending_explorer
@@ -17,7 +18,9 @@ from govcon_radar.ui.pages.prime_contractor_intelligence import render_prime_con
 
 
 def main() -> None:
-    settings = load_settings()
+    default_cloud_config = PROJECT_ROOT / "config" / "demo.yaml"
+    config_path = os.environ.get("GOVCON_RADAR_CONFIG")
+    settings = load_settings(config_path or (default_cloud_config if default_cloud_config.exists() else None))
     ensure_database(settings)
 
     st.set_page_config(

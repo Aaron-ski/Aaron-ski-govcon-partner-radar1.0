@@ -52,9 +52,9 @@ class Settings:
         }
 
 
-@lru_cache(maxsize=1)
-def load_settings(config_path: str | Path = DEFAULT_CONFIG_PATH) -> Settings:
-    path = Path(config_path)
+@lru_cache(maxsize=4)
+def load_settings(config_path: str | Path | None = DEFAULT_CONFIG_PATH) -> Settings:
+    path = Path(config_path or DEFAULT_CONFIG_PATH)
     with path.open("r", encoding="utf-8") as config_file:
         raw = yaml.safe_load(config_file)
     return Settings(raw=raw)

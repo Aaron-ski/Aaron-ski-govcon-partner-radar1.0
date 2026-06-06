@@ -22,7 +22,10 @@ def render_sidebar(settings: Settings) -> tuple[str, int]:
         index=settings.fiscal_years.index(settings.default_fiscal_year),
     )
     st.sidebar.divider()
-    st.sidebar.info("Phase 1 uses only local synthetic sample data. No live API calls are made.")
+    st.sidebar.info(
+        "Dashboard runtime uses local CSV/DuckDB data only. Demo records are curated public-data rows "
+        "or clearly labeled synthetic workflow records; no live API calls are made during page load."
+    )
     return selected_page, int(fiscal_year)
 
 
